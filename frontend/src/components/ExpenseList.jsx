@@ -63,7 +63,7 @@ const ExpenseList = () => {
       const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `SmartSpend_Report_${new Date().toLocaleDateString()}.pdf`);
+      link.setAttribute('download', `CapitalSpend_Report_${new Date().toLocaleDateString()}.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();

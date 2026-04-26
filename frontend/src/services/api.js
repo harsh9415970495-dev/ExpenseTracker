@@ -22,6 +22,7 @@ api.interceptors.request.use((config) => {
 export const authAPI = {
   signup: (data) => api.post('/auth/signup', data),
   login: (data) => api.post('/auth/login', data),
+  socialLogin: (data) => api.post('/auth/social-login', data),
   getCurrentUser: () => api.get('/auth/me'),
   updateProfile: (data) => api.put('/auth/profile', data),
 };
@@ -40,6 +41,10 @@ export const expenseAPI = {
 export const budgetAPI = {
   setBudget: (data) => api.post('/budget/set', data),
   getBudgetStatus: () => api.get('/budget/status'),
+};
+
+export const chatAPI = {
+  sendMessage: (messages) => api.post('/chat', { messages }),
 };
 
 export default api;

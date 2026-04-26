@@ -11,10 +11,10 @@ const Navbar = () => {
 
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
-             <span className="text-white font-black text-sm">S</span>
+             <span className="text-white font-black text-sm">C</span>
           </div>
           <h1 className="text-lg font-black tracking-tighter text-slate-900 dark:text-white uppercase select-none">
-            Smart<span className="text-blue-500">Spend</span> AI
+            Capital <span className="text-blue-500">Spend</span>
           </h1>
         </div>
 

@@ -57,6 +57,15 @@ export const AuthProvider = ({ children }) => {
     return response.data;
   };
 
+  const socialLogin = async (provider, email, username) => {
+    const response = await authAPI.socialLogin({ provider, email, username });
+    const { token, user } = response.data;
+    localStorage.setItem('token', token);
+    setToken(token);
+    setUser(user);
+    return response.data;
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
@@ -68,7 +77,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, token, loading, theme, login, signup, logout, toggleTheme }}>
+    <AuthContext.Provider value={{ user, setUser, token, loading, theme, login, signup, socialLogin, logout, toggleTheme }}>
       {children}
     </AuthContext.Provider>
 

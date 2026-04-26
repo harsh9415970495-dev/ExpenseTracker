@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, User, Bot, Sparkles } from "lucide-react";
+import { chatAPI } from "../services/api";
 
 function Chatbot() {
     const [messages, setMessages] = useState([]);
@@ -24,21 +25,15 @@ function Chatbot() {
         setLoading(true);
 
         try {
-            const res = await fetch("http://localhost:5000/api/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ messages: newMessages }),
-            });
-
-            const data = await res.json();
+            const res = await chatAPI.sendMessage(newMessages);
+            const data = res.data;
 
             setMessages([
                 ...newMessages,
                 { role: "assistant", content: data.reply || "I'm sorry, I couldn't process that. Please try again." },
             ]);
         } catch (err) {
+            console.error('Chat error:', err);
             setMessages([
                 ...newMessages,
                 { role: "assistant", content: "❌ API Connection Error. Please verify your backend is running and API key is set." },
@@ -55,10 +50,10 @@ function Chatbot() {
                 {messages.length === 0 && (
                     <div className="flex flex-col items-center justify-center h-full text-center space-y-4 px-4">
                         <div className="w-16 h-16 bg-blue-500/10 rounded-3xl flex items-center justify-center text-blue-500 animate-pulse">
-                           <Sparkles size={32} />
+                            <Sparkles size={32} />
                         </div>
                         <div>
-                            <p className="text-slate-900 dark:text-white font-bold text-lg">SmartSpend AI</p>
+                            <p className="text-slate-900 dark:text-white font-bold text-lg">Capital Spend AI</p>
                             <p className="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-relaxed">
                                 Ask me about your budgets, recent spending, or tips to save money!
                             </p>
@@ -79,13 +74,12 @@ function Chatbot() {
                                 {m.role === "user" ? "You" : "Assistant"}
                             </span>
                         </div>
-                        
+
                         <div
-                            className={`max-w-[90%] p-4 rounded-2xl text-sm leading-relaxed shadow-sm transition-all ${
-                                m.role === "user"
+                            className={`max-w-[90%] p-4 rounded-2xl text-sm leading-relaxed shadow-sm transition-all ${m.role === "user"
                                     ? "bg-blue-600 text-white rounded-tr-none"
                                     : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-tl-none border border-slate-100 dark:border-white/5"
-                            }`}
+                                }`}
                         >
                             <p className="whitespace-pre-wrap">{m.content}</p>
                         </div>
@@ -95,7 +89,7 @@ function Chatbot() {
                 {loading && (
                     <div className="flex flex-col items-start animate-fadeIn">
                         <div className="flex items-center gap-2 mb-2">
-                             <div className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                            <div className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
                                 <Bot size={12} className="text-blue-500" />
                             </div>
                             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Thinking...</span>

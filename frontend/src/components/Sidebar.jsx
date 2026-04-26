@@ -28,7 +28,7 @@ const Sidebar = () => {
              <Sparkles className="text-white w-6 h-6" />
           </div>
           <h1 className="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">
-            Smart<span className="text-blue-500">Spend</span>
+            Capital <span className="text-blue-500">Spend</span>
           </h1>
         </div>
       </div>

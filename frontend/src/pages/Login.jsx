@@ -11,8 +11,28 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login } = useContext(AuthContext);
+  const { login, socialLogin } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const handleSocialLogin = async (provider) => {
+    try {
+      setLoading(true);
+      setError('');
+      
+      // Simulating a social login popup and callback
+      // In a real app, you'd use @react-oauth/google or similar libraries here
+      const mockEmail = provider === 'Google' ? 'google.user@example.com' : 'facebook.user@example.com';
+      const mockName = provider === 'Google' ? 'Google Demo User' : 'Facebook Demo User';
+      
+      await socialLogin(provider, mockEmail, mockName);
+      navigate('/');
+    } catch (err) {
+      setError(`Failed to sign in with ${provider}`);
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,51 +61,76 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full animate-pulse"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
-      
-      <div className="w-full max-w-[440px] relative z-10 animate-fadeIn">
-        {/* Logo Section */}
-        <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl mb-6 ring-4 ring-white/5">
-             <Sparkles className="text-white w-8 h-8" />
+    <div className="min-h-screen bg-slate-950 flex flex-col md:flex-row overflow-hidden">
+      {/* Left Side: Visual & Branding */}
+      <div className="hidden md:flex md:w-3/5 lg:w-[65%] relative overflow-hidden bg-blue-900">
+        <img 
+          src="/login-bg.png" 
+          alt="Login background" 
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/40 to-transparent"></div>
+        
+        <div className="relative z-10 flex flex-col justify-between h-full p-16 lg:p-24">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-white/10 backdrop-blur-xl rounded-2xl flex items-center justify-center border border-white/20">
+              <Sparkles className="text-blue-400 w-6 h-6" />
+            </div>
+            <span className="text-2xl font-black tracking-tighter text-white uppercase">Capital Spend</span>
           </div>
-          <h1 className="text-4xl font-black tracking-tighter text-white uppercase">
-            Smart<span className="text-blue-500">Spend</span>
-          </h1>
-          <p className="text-slate-400 font-medium mt-2">Intelligence for your capital</p>
+
+          <div className="max-w-xl">
+            <h1 className="text-5xl lg:text-7xl font-black text-white leading-tight mb-6">
+              Master Your <span className="text-blue-500">Capital</span> with Intelligence.
+            </h1>
+            <p className="text-xl text-slate-400 leading-relaxed font-medium">
+              Join thousands of smart spenders who track, analyze, and optimize their daily finances with AI-driven insights.
+            </p>
+          </div>
+
+          <div className="flex gap-12 text-slate-500 font-bold text-xs uppercase tracking-[0.2em]">
+            <span>© 2026 CAPITAL SPEND</span>
+            <span>PRIVACY POLICY</span>
+            <span>TERMS OF SERVICE</span>
+          </div>
         </div>
+      </div>
 
-        {/* Main Card */}
-        <div className="glass-card p-8 md:p-10 border-white/10 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)]">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-white">Welcome Back</h2>
-            <p className="text-slate-400 text-sm mt-1">Please enter your credentials to continue.</p>
+      {/* Right Side: Form */}
+      <div className="flex-1 flex flex-col justify-center items-center p-8 md:p-12 lg:p-20 bg-slate-950">
+        <div className="w-full max-w-[420px] animate-fadeIn">
+          {/* Mobile Logo */}
+          <div className="flex md:hidden items-center gap-3 mb-12">
+            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+              <Sparkles className="text-white w-5 h-5" />
+            </div>
+            <span className="text-xl font-black tracking-tighter text-white uppercase">Capital Spend</span>
           </div>
 
-          {/* Error Message */}
+          <div className="mb-10">
+            <h2 className="text-3xl font-black text-white mb-2">Welcome Back</h2>
+            <p className="text-slate-500 font-medium">Enter your details to access your dashboard.</p>
+          </div>
+
           {error && (
-            <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-xl text-sm font-semibold flex items-center gap-3">
+            <div className="mb-8 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-sm font-bold flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></div>
               {error}
             </div>
           )}
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Email Address</label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-blue-500 transition-colors" size={18} />
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="name@company.com"
-                  className="input-premium pl-12 w-full bg-slate-900/50 border-slate-800 text-white placeholder:text-slate-600 focus:bg-slate-900"
+                  className="w-full bg-slate-900 border border-slate-800 rounded-2xl pl-12 pr-4 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-blue-500/50 transition-all shadow-inner"
                   required
                 />
               </div>
@@ -93,40 +138,27 @@ const Login = () => {
 
             <div className="space-y-2">
               <div className="flex justify-between items-center ml-1">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Password</label>
-                <Link to="#" className="text-xs font-bold text-blue-500 hover:text-blue-400 transition-colors">Forgot?</Link>
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Password</label>
+                <Link to="#" className="text-[10px] font-black text-blue-500 hover:text-blue-400 uppercase tracking-widest">Forgot Password?</Link>
               </div>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-blue-500 transition-colors" size={18} />
                 <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="input-premium pl-12 w-full bg-slate-900/50 border-slate-800 text-white placeholder:text-slate-600 focus:bg-slate-900"
+                  className="w-full bg-slate-900 border border-slate-800 rounded-2xl pl-12 pr-4 py-4 text-white placeholder:text-slate-700 focus:outline-none focus:border-blue-500/50 transition-all shadow-inner"
                   required
                 />
               </div>
             </div>
 
-            {/* Remember Me */}
-            <div className="flex items-center gap-3 ml-1">
-              <input
-                type="checkbox"
-                id="remember"
-                className="w-4 h-4 rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900"
-              />
-              <label htmlFor="remember" className="text-sm text-slate-400 font-medium cursor-pointer select-none">
-                Keep me signed in
-              </label>
-            </div>
-
-            {/* Button */}
             <button
               type="submit"
               disabled={loading}
-              className="btn-premium w-full flex items-center justify-center gap-3 py-4 text-sm font-black uppercase tracking-widest"
+              className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-3 active:scale-[0.98]"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -139,27 +171,37 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Social Login Mock (Visual Only) */}
-          <div className="mt-8 pt-8 border-t border-white/5 flex flex-col items-center gap-6">
-            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Or continue with</p>
+          <div className="mt-12 flex flex-col items-center gap-6">
+            <div className="flex items-center gap-4 w-full">
+              <div className="h-px bg-slate-900 flex-1"></div>
+              <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Social Login</span>
+              <div className="h-px bg-slate-900 flex-1"></div>
+            </div>
+            
             <div className="flex gap-4 w-full">
-               <button className="flex-1 py-3 px-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+               <button 
+                onClick={() => handleSocialLogin('Google')}
+                disabled={loading}
+                className="flex-1 py-4 border border-slate-800 rounded-2xl hover:bg-slate-900 transition-all flex items-center justify-center gap-3 group disabled:opacity-50"
+               >
                  <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
+                 <span className="text-[10px] font-black text-slate-400 group-hover:text-white uppercase tracking-widest">Google</span>
                </button>
-               <button className="flex-1 py-3 px-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+               <button 
+                onClick={() => handleSocialLogin('Facebook')}
+                disabled={loading}
+                className="flex-1 py-4 border border-slate-800 rounded-2xl hover:bg-slate-900 transition-all flex items-center justify-center gap-3 group disabled:opacity-50"
+               >
                  <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" className="w-5 h-5" alt="Facebook" />
+                 <span className="text-[10px] font-black text-slate-400 group-hover:text-white uppercase tracking-widest">Facebook</span>
                </button>
             </div>
           </div>
-        </div>
 
-        {/* Footer Link */}
-        <div className="mt-10 text-center">
-          <p className="text-slate-400 font-medium">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-white font-bold hover:text-blue-500 transition-all inline-flex items-center gap-1 group">
-              Create Account
-              <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+          <p className="mt-12 text-center text-slate-500 font-medium">
+            New here?{' '}
+            <Link to="/signup" className="text-white font-bold hover:text-blue-500 transition-all">
+              Create an account
             </Link>
           </p>
         </div>
